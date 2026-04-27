@@ -1,18 +1,2 @@
-const res = await fetch(URL, OPTIONS);
-
-const data = await res.json();
-
-console.log("RAW:", data);
-
-if (data.error) {
-  document.getElementById("out").innerText =
-    "ERROR: " + data.error.message;
-  return;
-}
-
-const text =
-  data.candidates?.[0]?.content?.parts?.[0]?.text
-  || data.candidates?.[0]?.output
-  || JSON.stringify(data);
-
-document.getElementById("out").innerText = text;
+const url =
+"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=YOUR_KEY";
