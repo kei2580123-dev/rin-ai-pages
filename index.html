@@ -1,2 +1,75 @@
-const url =
-"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=YOUR_KEY";
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>Rin AI</title>
+</head>
+<body>
+
+<h1>Rin AI - X投稿生成</h1>
+
+<button onclick="generate()">生成</button>
+
+<pre id="out">ここに表示される</pre>
+
+<script>
+async function generate() {
+
+  const out = document.getElementById("out");
+  out.innerText = "生成中...";
+
+  const API_KEY = "AIzaSyBm9Iun0UZ3BuzPZWPFY3yLUcICtk9Nsak";
+
+  const URL =
+    "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + API_KEY;
+
+  const prompt = `
+あなたはSNSインフルエンサーAI「Rin」。
+バズるX投稿を1つ作ってください。
+
+条件：
+・140文字以内
+・絵文字あり
+・共感系
+・Z世代向け
+`;
+
+  try {
+    const res = await fetch(URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        contents: [
+          {
+            parts: [{ text: prompt }]
+          }
+        ]
+      })
+    });
+
+    const data = await res.json();
+
+    console.log("RAW:", data);
+
+    if (data.error) {
+      out.innerText = "ERROR: " + data.error.message;
+      return;
+    }
+
+    const text =
+      data.candidates?.[0]?.content?.parts?.[0]?.text
+      || JSON.stringify(data);
+
+    out.innerText = text;
+
+  } catch (e) {
+    console.log("FETCH ERROR:", e);
+    out.innerText = "通信エラー: " + e.message;
+  }
+}
+</script>
+
+</body>
+</html>
